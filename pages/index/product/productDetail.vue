@@ -442,11 +442,7 @@
 				typeActive: state => state.theme.typeActive,
 				typeConfig: state => state.theme.typeConfig,
 				sh: state => state.user.sh,
-			}),
-			...mapGetters({
-				themeConfig: 'theme/themeConfig',
-				sys: 'theme/sys'
-			}),
+			}), 
 			themeConfig() {
 				return this.typeConfig.chemnet
 			},
