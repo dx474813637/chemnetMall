@@ -43,6 +43,11 @@
 					this.list = res.list
 					this.card = res.mp
 					this.more = res.more
+					if(res.tz == 1) {
+						uni.reLaunch({
+							url: res.url
+						})
+					}
 				}
 			}
 		}
