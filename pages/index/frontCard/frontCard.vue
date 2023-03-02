@@ -50,5 +50,7 @@
 </script>
 
 <style lang="scss">
-
+	.w {
+		padding-bottom: 60px;
+	}
 </style>

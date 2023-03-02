@@ -84,14 +84,16 @@
 				tabs_list: [
 					{
 						name: '全部',
-						trade_type: 'bs',
+						params: {},
 						disabled: false,
 					},
-					// {
-					// 	name: '买盘',
-					// 	trade_type: 'b',
-					// 	disabled: false,
-					// },
+					{
+						name: '我加入的群',
+						params: {
+							my: 1
+						},
+						disabled: false,
+					},
 					// {
 					// 	name: '卖盘',
 					// 	trade_type: 's',
@@ -150,6 +152,7 @@
 				if(this.loadstatus != 'loadmore') return
 				this.loadstatus = 'loading'
 				const res = await this.$api.group_book_list({params:{
+					...this.tabs_list[this.tabs_current].params,
 					p: this.curP,
 					terms: this.keyword
 					// trade_type: this.tabs_list[this.tabs_current].trade_type
