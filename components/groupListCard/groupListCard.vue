@@ -3,15 +3,17 @@
 		<view class="item">
 			<u--image 
 			showLoading 
-			src="https://cdn.uviewui.com/uview/album/1.jpg" 
+			:src="origin.pic" 
 			width="80px" 
 			height="80px" 
 			radius="5"
 			></u--image>
 		</view>
-		<view class="item u-flex-1 u-m-l-30">
-			<view class="u-font-36 text-dark u-m-b-8 u-line-1">PTA行业交流行业交流</view>
-			<view class="u-font-28 text-light u-line-3">欢迎大家积极邀请PTA行业相关人士加入群友通讯录行业相关人士加入群友通讯录，共同打造产业精准人脉圈，做大行业交流平台。</view>
+		<view class="item u-m-l-30 u-flex-1" >
+			<view class="u-font-36 text-dark u-m-b-8 u-line-1" >{{origin.name}}</view>
+			<view class="u-font-28 text-light u-line-3">
+				<rich-text :nodes="origin.info"></rich-text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -41,5 +43,6 @@
 </script>
 
 <style lang="scss" scoped>
-
+	.card { 
+	}
 </style>

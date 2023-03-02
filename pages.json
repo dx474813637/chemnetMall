@@ -81,6 +81,13 @@
 			"enablePullDownRefresh": false
 		}
 
+	}, {
+		"path": "pages/index/frontCard/frontCard",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
 	}],
 	"subPackages": [{
 		"root": "pages/my",
@@ -240,6 +247,20 @@
 			"path": "account/change_account",
 			"style": {
 				"navigationBarTitleText": "账号切换",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/my_card",
+			"style": {
+				"navigationBarTitleText": "我的名片",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/setCard2Group",
+			"style": {
+				"navigationBarTitleText": "设置名片页关联群",
 				"enablePullDownRefresh": false
 			}
 

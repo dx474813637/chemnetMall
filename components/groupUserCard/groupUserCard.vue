@@ -1,22 +1,53 @@
 <template>
-	<view class="card u-p-30 bg-white u-radius-8 u-flex u-flex-between" @click="cardClick">
-		<view class="item">
-			<u--image 
-			showLoading 
-			src="https://cdn.uviewui.com/uview/album/1.jpg" 
-			width="50px" 
-			height="50px" 
-			shape="circle"
-			></u--image>
+	<view class="card u-p-30 bg-white u-radius-8 u-flex u-flex-between">
+		<view class="item" @click="cardClick">
+			<template v-if="origin.img"> 
+				<u--image 
+				showLoading 
+				:src="origin.img" 
+				width="50px" 
+				height="50px" 
+				shape="circle"
+				></u--image>
+			</template>
+			<template v-else>
+				<view class="u-flex u-flex-items-center u-flex-center" style="width: 50px; height: 50px; border-radius: 25px;background-color: #eee;">
+					<i class="custom-icon-myfill custom-icon u-font-40" style="color: #999;"></i>
+				</view>
+			</template>
 		</view>
-		<view class="item u-flex-1 u-m-l-30">
-			<view class="u-font-32 text-dark u-m-b-8 u-line-1">张三name</view>
-			<view class="u-font-26 text-light u-line-2">名头欢迎大家积极邀请PTA行业相关人士加入群友通讯录行业相关人士加入群友通讯录，共同打造产业精准人脉圈，做大行业交流平台。</view>
+		<view class="item u-flex-1 u-m-l-30" @click="cardClick">
+			<view class="u-font-32 text-dark u-m-b-8 u-flex u-flex-items-center">
+				<view class="u-m-r-20">{{origin.name}}</view>
+				<u-tag text="我" plain type="primary" size="mini" v-if="origin.isMe"></u-tag>
+			</view>
+			<view class="u-font-26 text-light u-line-2">{{origin.company}}</view>
+		</view>
+		<view class="item u-m-r-10 u-flex u-flex-items-center u-flex-center u-p-20" @click="makeCall" v-if="origin.isMe != 1 && origin.phone">
+			<i class="custom-icon-dianhua custom-icon " style="font-size: 24px; color: #26c341;"></i>
+		</view>
+		<view class="item u-flex u-flex-items-center u-flex-center  text-primary " >
+			<u-button 
+				type="error" 
+				size="small" 
+				@click="handleGoto('/pages/my/inquiry/inquiry')" 
+				plain
+				v-if="origin.isMe != 1 && origin.phone"
+				:customStyle="{
+					fontSize: '14px',
+					minWidth: 'auto'
+				}">询盘</u-button>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		mapState,
+		mapGetters,
+		mapMutations,
+		mapActions
+	} from 'vuex'
 	export default {
 		name:"groupUserCard",
 		props: {
@@ -33,8 +64,16 @@
 			};
 		},
 		methods: {
+			...mapMutations({
+				handleGoto: 'user/handleGoto'
+			}),
 			cardClick() {
-				this.$emit('groupClick', {data: this.origin})
+				this.$emit('cardClick', {data: this.origin})
+			},
+			makeCall() {
+				uni.makePhoneCall({
+					phoneNumber: this.origin.phone
+				});
 			}
 		}
 	}

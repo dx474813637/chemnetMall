@@ -13,7 +13,7 @@
 			</view>
 			
 		</view>
-		<view class="tabs-w">
+		<!-- <view class="tabs-w">
 			<u-tabs
 				:list="tabs_list"
 				:current="tabs_current"
@@ -23,7 +23,7 @@
 				@change="handleTabsChange"
 			> 
 			</u-tabs>
-		</view> 
+		</view> -->
 		<view class="list">
 			<u-list
 				height="100%"
@@ -35,11 +35,14 @@
 					v-for="(item, index) in indexList"
 					:key="index"
 				>
-					<view class="u-p-10 u-p-l-20 u-p-r-20">
+					<view class="u-p-10 u-p-l-20 u-p-r-20 card" > 
+						<view class="guanlian" v-if="item.gl">
+							<u-tag text="当前设置" size="mini" type="error"></u-tag>
+						</view>
 						<groupListCard
 							:origin="item"
-							@groupClick="groupClick"
-						></groupListCard>
+							@groupClick="setGroup(item)"
+						></groupListCard> 
 					</view>
 					
 				</u-list-item>
@@ -60,6 +63,20 @@
 				</template>
 			</u-list>
 		</view>
+		
+		<tabBar theme="chemnet" :customStyle="{
+				'boxShadow': '0 0 10rpx rgba(0,0,0,.1)'
+			}">
+			<view class="pan-tabbar u-p-20" :style="{
+					color: themeConfig.tabText,
+					backgroundColor: themeConfig.tabBg,
+				}">
+				<view @click="setGroup({id: 0, gl: 1})" class="item-btn ">
+					<u-button type="primary">取消关联群</u-button>
+				</view> 
+			</view>
+		
+		</tabBar>
 	</view>
 </template>
 
@@ -100,11 +117,14 @@
 				],
 				indexList: [],
 				curP: 1,
-				loadstatus: 'loadmore'
+				loadstatus: 'nomore',
+				myCard: {},
+				checkedId: '0'
 			};
 		},
 		async onLoad() {
 			uni.showLoading()
+			this.getmyCard() 
 			await this.getData() 
 		},
 		computed: {
@@ -121,9 +141,9 @@
 				await this.getData()
 			},
 			initParamas() {
-				this.curP = 1;
+				// this.curP = 1;
 				this.indexList = [];
-				this.loadstatus = 'loadmore'
+				// this.loadstatus = 'loadmore'
 			},
 			handleSearch(v) {
 				this.refreshList()
@@ -146,22 +166,28 @@
 			scrolltolower() {
 				this.getMoreData()
 			},
+			async getmyCard() { 
+				const res = await this.$api.login_card()
+				if(res.code == 1) { 
+					this.myCard = res.list 
+				}
+			},
 			async getData() {
-				if(this.loadstatus != 'loadmore') return
-				this.loadstatus = 'loading'
+				// if(this.loadstatus != 'loadmore') return
+				// this.loadstatus = 'loading'
 				const res = await this.$api.group_book_list({params:{
-					p: this.curP,
-					terms: this.keyword
-					// trade_type: this.tabs_list[this.tabs_current].trade_type
+					// p: this.curP,
+					terms: this.keyword,
+					set: 1, 
 				}})
 				if(res.code == 1) {
 					this.setOnlineControl(res)
 					this.indexList = [...this.indexList, ...res.list]
-					if( this.indexList.length == res.total || !res.list ||res.list.length == 0) {
-						this.loadstatus = 'nomore'
-					}else {
-						this.loadstatus = 'loadmore'
-					}
+					// if( this.indexList.length == res.total || !res.list ||res.list.length == 0) {
+					// 	this.loadstatus = 'nomore'
+					// }else {
+					// 	this.loadstatus = 'loadmore'
+					// }
 				}
 			},
 			async getMoreData() {
@@ -179,9 +205,39 @@
 			// }, 
 			groupClick({data}) {
 				
-				uni.navigateTo({
-					url: `/pages/index/group/group?id=${data.id}`
-				})
+				// uni.navigateTo({
+				// 	url: `/pages/index/group/group?id=${data.id}`
+				// })
+			},
+			async setGroup(data) {
+				let id = data.id
+				let content = '是否设置该群为名片关联群'
+				if(data.gl == 1) {
+					content = '是否取消关联群'
+					id=0
+				}
+				uni.showModal({
+					title: '提示',
+					content: content,
+					success: async (r) => {
+						if (r.confirm) {
+							const res = await this.$api.edit_tiao_book({
+								params: {
+									id: id
+								}
+							})
+							if(res.code == 1) {
+								uni.showToast({
+									title: res.msg
+								})
+								await this.refreshList()
+							}
+						} else if (r.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
+				
 			}
 		}
 	}
@@ -195,9 +251,29 @@
 <style lang="scss" scoped>
 	.w {
 		height: 100%;
+		padding-bottom: 60px;
 	}
+	.pan-tabbar {
+		height: 100%;
+
+		.item-btn {
+			height: 100%;
+
+			&.share-btn {}
+		}
+	}
+
 	.list {
-		height: calc(100% - 83px);
+		height: calc(100% - 39px);
 		
+	}
+	.card {
+		position: relative;
+		.guanlian {
+			position: absolute;
+			left: 10px;
+			top: 5px;
+			z-index: 10;
+		}
 	}
 </style>
