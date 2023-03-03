@@ -148,6 +148,17 @@
 						url: item.url
 					})
 				}
+				else if (item.type == 4) {
+					uni.navigateToMiniProgram({
+						appId: item.url,
+						success(res) {
+							// 打开成功
+						},
+						complete(res1) {
+							console.log(res1);
+						}
+					});
+				}
 				
 				
 				

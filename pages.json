@@ -71,14 +71,16 @@
 		"path": "pages/index/group/groupList",
 		"style": {
 			"navigationBarTitleText": "",
-			"enablePullDownRefresh": false
+			"enablePullDownRefresh": false,
+			"onReachBottomDistance": 50
 		}
 
 	}, {
 		"path": "pages/index/group/group",
 		"style": {
 			"navigationBarTitleText": "",
-			"enablePullDownRefresh": false
+			"enablePullDownRefresh": true,
+			"onReachBottomDistance": 50
 		}
 
 	}, {
@@ -88,7 +90,14 @@
 			"enablePullDownRefresh": false
 		}
 
-	}],
+	}, {
+			"path": "pages/index/myFollow/myFollow",
+			"style": {
+				"navigationBarTitleText": "我的关注",
+				"enablePullDownRefresh": false
+			}
+
+		}],
 	"subPackages": [{
 		"root": "pages/my",
 		"pages": [{

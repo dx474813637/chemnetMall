@@ -1,18 +1,45 @@
 <template>
 	<view class="w">
-		<view class="search-wrapper u-flex u-p-l-20 u-p-r-20">
-			<view class="item u-flex-1 u-p-b-10">
-				<u-search 
-					placeholder="检索名称" 
-					v-model="keyword"
-					clearabled
-					:showAction="false"
-					bgColor="#e8e8e8"
-					@search="handleSearch"
-				></u-search>
-			</view>
-			
+		<view class="list-header u-m-b-40"> 
+			<view class="bg-w"></view>
+			<image class="img-bg u-m-t-20 u-m-b-10" :src="topimg" mode="widthFix"></image> 
+			<view class="xun-ad-w u-p-20 u-radius-8 bg-white u-m-l-20 u-m-r-20 ">
+				<view class="notice-bar u-p-20 u-radius-8 u-m-b-20">
+					<view class="notice-sub u-m-b-20">
+						<view class="text-dark u-p-l-5 u-flex u-flex-items-baseline">
+							<view>已为</view>
+							<view class="u-p-l-10 u-p-r-10  ">
+								<u-count-to :startVal="10000" color="#007aff" :endVal="button.num" duration="1200"></u-count-to>
+							</view> 
+							<view>个询盘提供匹配服务</view> 
+						</view>
+					</view>
+					<view class="notice bg-white u-p-10 u-p-l-20 u-p-r-20 u-radius-4">
+						<view class="text-dark u-font-28 notice-title">最新询盘</view>
+						<u-notice-bar :text="notice" bgColor="transparent" color="#333" direction="column"></u-notice-bar> 
+					</view>
+				</view>
+				<view class="inquiry-btn u-m-b-20">
+					<u-button type="primary" @click="btnClick" :customStyle="{borderRadius: '8px', backgroundColor: '#2068e7', borderColor: '#2068e7'}">{{button.name}}</u-button>
+				</view>
+				<view class="text-base u-font-24 u-text-center">发布采购商品，系统将精准匹配优质生产商，专人反馈</view>
+			</view> 
 		</view>
+		<u-sticky>
+			<view class="search-wrapper u-flex u-p-l-20 u-p-r-20">
+				<view class="item u-flex-1 u-p-b-10">
+					<u-search 
+						placeholder="检索名称" 
+						v-model="keyword"
+						clearabled
+						:showAction="false"
+						bgColor="#e8e8e8"
+						@search="handleSearch"
+					></u-search>
+				</view>
+				
+			</view>
+		</u-sticky> 
 		<view class="tabs-w">
 			<u-tabs
 				:list="tabs_list"
@@ -25,41 +52,32 @@
 			</u-tabs>
 		</view> 
 		<view class="list">
-			<u-list
-				height="100%"
-				enableBackToTop
-				@scrolltolower="scrolltolower"
-				:preLoadingScreen="100"
-			>
-				<u-list-item
-					v-for="(item, index) in indexList"
-					:key="index"
-				>
-					<view class="u-p-10 u-p-l-20 u-p-r-20">
-						<groupListCard
-							:origin="item"
-							@groupClick="groupClick"
-						></groupListCard>
-					</view>
-					
-				</u-list-item>
-				
-				<template name="dataStatus">
-					<template v-if="indexList.length == 0">
-						<u-empty
-							mode="data"
-							:icon="typeConfig.white.empty"
-						>
-						</u-empty>
-					</template>
-					<template v-else>
-						<u-loadmore
-							:status="loadstatus"
-						/>
-					</template>
+			<view class="u-p-10 u-p-l-20 u-p-r-20"
+				v-for="(item, index) in indexList"
+				:key="index">
+				<groupListCard
+					:origin="item"
+					@groupClick="groupClick"
+				></groupListCard>
+			</view>
+			
+			<template name="dataStatus">
+				<template v-if="indexList.length == 0">
+					<u-empty
+						mode="data"
+						:icon="typeConfig.white.empty"
+					>
+					</u-empty>
 				</template>
-			</u-list>
-		</view>
+				<template v-else>
+					<u-loadmore
+						:status="loadstatus"
+					/>
+				</template>
+			</template>
+		</view> 
+		
+		
 	</view>
 </template>
 
@@ -102,7 +120,10 @@
 				],
 				indexList: [],
 				curP: 1,
-				loadstatus: 'loadmore'
+				loadstatus: 'loadmore',
+				button: {},
+				notice: [],
+				topimg: ''
 			};
 		},
 		async onLoad() {
@@ -114,6 +135,9 @@
 				typeConfig: state => state.theme.typeConfig,
 			}),
 		}, 
+		async onReachBottom () {
+			this.scrolltolower()
+		},
 		methods: {
 			...mapMutations({
 				handleGoto: 'user/handleGoto'
@@ -159,6 +183,9 @@
 				}})
 				if(res.code == 1) {
 					this.setOnlineControl(res)
+					this.button = res.button
+					this.notice = res.notice
+					this.topimg = res.topimg 
 					this.indexList = [...this.indexList, ...res.list]
 					if( this.indexList.length == res.total || !res.list ||res.list.length == 0) {
 						this.loadstatus = 'nomore'
@@ -185,6 +212,11 @@
 				uni.navigateTo({
 					url: `/pages/index/group/group?id=${data.id}`
 				})
+			},
+			btnClick() {
+				uni.navigateTo({
+					url: this.button.url
+				})
 			}
 		}
 	}
@@ -192,7 +224,15 @@
 <style lang="scss">
 	page {
 		background-color: $page-bg2;
-		height: 100vh;
+		min-height: 100vh;
+		/deep/ {
+			.u-notice-bar {
+				padding-left: 0px!important;
+			}
+			.u-notice__left-icon {
+				display: none!important;
+			}
+		}
 	}
 </style>
 <style lang="scss" scoped>
@@ -200,7 +240,47 @@
 		height: 100%;
 	}
 	.list {
-		height: calc(100% - 83px);
+		// height: calc(100% - 83px);
+		min-height: calc(100vh - 83px);
 		
+	}
+	.list-new {
+		// height: 100vh;
+	}
+	.list-header {
+		position: relative;
+		.bg-w {
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 180px;
+			z-index: 5;
+			background-color: #2c67df; 
+		}
+		.img-bg {
+			position: relative;
+			z-index: 5;
+			width: 100vw;
+		} 
+		.xun-ad-w {
+			position: relative;
+			z-index: 5;
+			box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+		}
+		.notice-title {
+			font-weight: bold;
+		}
+		.notice-bar { 
+			// width: 315px;
+			background-color: #f1f5fe;
+		}
+		.inquiry-btn {
+			// width: 300px; 
+			
+		}
+		.num {
+			
+		}
 	}
 </style>

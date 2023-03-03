@@ -5,7 +5,7 @@
 			:model="form"
 			ref="form"
 			:rules="rules"
-			labelWidth="60px" 
+			labelWidth="75px" 
 			>
 			<u-form-item
 				label="图片"
@@ -67,6 +67,13 @@
 					placeholder="请输入地址"
 				></u--input> 
 			</u-form-item> 
+			<u-form-item label="主营业务" prop="info" >  
+				<!-- <u--input
+					v-model="form.info"  
+					placeholder="请输入主营业务"
+				></u--input> -->
+				<u--textarea v-model="form.info" placeholder="请输入主营业务" height="160" ></u--textarea>
+			</u-form-item> 
 		</u--form>
 		
 		<view class="confirm-rows u-m-t-30 u-m-b-30" >
@@ -88,7 +95,8 @@
 					tel: '',
 					email: '',
 					address: '', 
-					img: ''
+					img: '',
+					info: ''
 				},
 				fileList1: [],
 				rules: {
@@ -164,6 +172,7 @@
 					this.form.tel = res.list.tel
 					this.form.address = res.list.address
 					this.form.img = res.list.img
+					this.form.info = res.list.info
 					if(res.list.img) {
 						this.fileList1 = [{url: this.form.img}]
 					}
@@ -246,5 +255,12 @@
 </script>
 
 <style lang="scss">
-
+	page {
+		/deep/ {
+			.u-form-item__body__left {
+				align-items: flex-start!important;
+				padding-top: 10px!important;
+			}
+		}
+	}
 </style>

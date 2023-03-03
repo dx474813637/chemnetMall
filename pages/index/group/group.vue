@@ -1,80 +1,132 @@
 <template>
-	<view class="w u-flex u-flex-column" :style="{
+	<view class="w " :style="{
 		backgroundColor: themeConfig.pageBg,
 		transition: 'all .3s'
 	}">
-		<view class="group-header">
-			<view class="group-refresh-btn" @click="refreshList">
-				<i class="custom-icon-refresh custom-icon text-white u-font-40"></i>
-			</view>
-			<view class="group-header-bg">
+		<view class="group-header ">
+			<view class="bg-w"></view>
+			
+			<!-- <view class="group-header-bg">
 				<image :src="groupData.img" mode="aspectFill" ></image>
-			</view>
-			<view class="group-header-main">
-				<view class="u-flex u-m-b-20" style="height: 60px;">
-					<view class="item "> 
-						<u--image 
-							showLoading 
-							:src="groupData.pic" 
-							width="60px" 
-							height="60px"
-							 shape="circle"
-						></u--image>
-					</view>
-					<view class="item u-flex-1 u-flex u-flex-column u-flex-between u-m-l-20">
-						<view class="u-font-32 text-dark u-p-t-10 group-name text-white">{{groupData.name}}</view>
-						<view class="u-font-28 text-white u-flex u-p-b-10">
-							<view class="u-flex u-m-r-15">
-								<u-icon name="eye-fill" color="#007aff"></u-icon>
-								<view class="u-m-l-8" v-if="groupData.hasOwnProperty('num')">浏览：{{groupData.num}}</view>	
-							</view>
-							<view class="u-flex">
-								<u-icon name="account-fill" color="#f90"></u-icon>
-								<view class="u-m-l-8" >成员：{{memberNum}}</view>	
+			</view> -->
+			<view class="group-header-main u-radius-10 bg-white  " style="overflow: hidden;">
+				
+				<view class="u-m-20 u-radius-10" style="background-color: #f0f4fd; overflow: hidden;">
+					<view class="u-flex u-p-10 u-p-l-20 u-p-r-20" >
+						<view class="item "> 
+							<u--image 
+								showLoading 
+								:src="groupData.pic" 
+								width="60px" 
+								height="60px"
+								 shape="circle"
+							></u--image>
+						</view>
+						<view class="item u-flex-1 u-m-l-20">
+							<view class="u-font-30 text-dark u-m-t-10 u-m-b-10 group-name text-dark u-line-2">{{groupData.name}}</view>
+							<view class="u-font-26 text-dark u-flex ">
+								<view class="u-flex u-m-r-15">
+									<u-icon name="eye" color="#007aff"></u-icon>
+									<view class="u-m-l-8 text-dark" v-if="groupData.hasOwnProperty('num')">浏览：{{groupData.num}}</view>	
+								</view>
+								<view class="u-flex">
+									<u-icon name="account" color="#f90"></u-icon>
+									<view class="u-m-l-8 text-dark" >成员：{{memberNum}}</view>	
+								</view>
+								<view class="group-refresh-btn u-m-l-20" @click="refreshList">
+									<i class="custom-icon-refresh custom-icon text-primary u-font-36"></i>
+								</view>
 							</view>
 						</view>
 					</view>
+					<view class="u-line-3 u-font-24 u-p-20 text-base bg-white u-m-l-20 u-m-r-20 u-m-b-20 u-radius-8" v-if="groupData.info">
+						<rich-text :nodes="groupData.info"></rich-text> 
+					</view>
+					<image 
+						@click="handleGoto('/pages/my/inquiry/inquiry')" 
+						:src="topimg" style="width: 100%; display: block;" mode="widthFix"></image>
 				</view>
-				<view class="u-line-3 u-font-26 text-white" v-if="groupData.info">
-					<rich-text :nodes="groupData.info"></rich-text> 
-				</view>
+				<u-notice-bar v-if="groupData.title" :text="groupData.title" mode="closable" bgColor="#f1f5fe" color="#007aff"></u-notice-bar>
 			</view>
 		</view>
-		<view class="search-wrapper u-flex u-p-10 u-p-l-20 u-p-r-20 bg-white u-border-bottom">
-			<view class="item u-flex-1 ">
-				<u-search 
-					placeholder="检索群成员" 
-					v-model="keyword"
-					clearabled
-					:showAction="false"
-					bgColor="#e8e8e8"
-					@search="handleSearch"
-				></u-search>
-			</view>
+		<u-sticky>
+			<view class="search-wrapper u-flex u-p-10 u-p-l-20 u-p-r-20" style="background-color: #f8f8f8;">
+				<view class="item u-flex-1 ">
+					<u-search 
+						placeholder="检索群成员" 
+						v-model="keyword"
+						clearabled
+						:showAction="false"
+						bgColor="#fff"
+						shape="square"
+						@search="handleSearch"
+					></u-search>
+				</view>
+				
+			</view> 
+		</u-sticky> 
+		<view class="group-main u-p-l-20 u-p-r-20  u-p-t-10">
 			
-		</view>
-		<view class="group-main">
-			<u-list
+			<u-swipe-action >
+				<u-swipe-action-item
+				  :options="item.options" 
+				  v-for="(item, index) in list"
+				  :disabled="item.disabled"
+				  autoClose
+				  :key="item.id" 
+				  :name="index"
+				  @click="btnClick"
+				>
+					<view class="swipe-action " >
+						<view class="swipe-action__content " >
+							<groupUserCard
+								:origin="item"
+								@makeCall="makeCall"
+								@cardClick="cardClick"
+								@follow="follow"
+							></groupUserCard>
+						</view>
+					</view>
+				  
+				</u-swipe-action-item>
+			</u-swipe-action> 
+			
+			<template name="dataStatus">
+				<template v-if="indexList.length == 0">
+					<u-empty
+						mode="data"
+						:icon="typeConfig.white.empty"
+					>
+					</u-empty>
+				</template>
+				<template v-else>
+					<u-loadmore
+						:status="loadstatus"
+					/>
+				</template>
+			</template> 
+			<!-- <u-list
 				height="100%"
 				enableBackToTop
 				@scrolltolower="scrolltolower"
 				:preLoadingScreen="100"
 			>
-				<u-notice-bar v-if="groupData.title" :text="groupData.title" mode="closable"></u-notice-bar>
 				
-				<!-- <template v-if="groupData.guanli != 1">
-					<u-list-item
-						v-for="(item, index) in 10"
-						:key="index"
-					>
-						<view class="u-border-top">
-							<groupUserCard
-								:origin="item" 
-							></groupUserCard>
-						</view>
-						
-					</u-list-item>
-				</template> -->
+				
+				<view class="search-wrapper u-flex u-p-10 u-p-l-20 u-p-r-20">
+					<view class="item u-flex-1 ">
+						<u-search 
+							placeholder="检索群成员" 
+							v-model="keyword"
+							clearabled
+							:showAction="false"
+							bgColor="#fff"
+							shape="square"
+							@search="handleSearch"
+						></u-search>
+					</view>
+					
+				</view> 
 				<u-swipe-action >
 					<u-swipe-action-item
 					  :options="item.options" 
@@ -88,7 +140,8 @@
 						<view class="swipe-action " >
 							<view class="swipe-action__content u-border-top" >
 								<groupUserCard
-									:origin="item" 
+									:origin="item"
+									@makeCall="makeCall"
 									@cardClick="cardClick"
 								></groupUserCard>
 							</view>
@@ -111,7 +164,7 @@
 						/>
 					</template>
 				</template>
-			</u-list>
+			</u-list> -->
 		</view>
 		<view style="position: relative;z-index: 10;">
 			<u-loading-page
@@ -206,7 +259,9 @@
 				curP: 1,
 				loadstatus: 'loadmore',
 				notice: '',
-				show: false
+				show: false,
+				nologintips: '',
+				topimg: ''
 			};
 		},
 		computed: {
@@ -228,6 +283,7 @@
 					return {
 						...ele,  
 						isMe: isMe,
+						// disabled: false,
 						disabled: disabled || isMe == 1,
 						options: [
 							{
@@ -252,11 +308,14 @@
 			// await this.getCpyData()
 			// await this.getDataList()
 		}, 
-		// async onPullDownRefresh() {
-		// 	console.log('refresh');
-		// 	await this.refreshList()
-		// 	uni.stopPullDownRefresh();
-		// },
+		async onPullDownRefresh() {
+			console.log('refresh');
+			await this.refreshList()
+			uni.stopPullDownRefresh();
+		},
+		async onReachBottom () {
+			this.scrolltolower()
+		},
 		methods: {
 			...mapMutations({
 				handleGoto: 'user/handleGoto'
@@ -276,8 +335,7 @@
 				await this.getData()
 			},
 			showToast(params) {
-				this.$refs.uToast.show({
-					position: 'bottom',
+				this.$refs.uToast.show({ 
 					...params,
 				})
 			},
@@ -303,6 +361,8 @@
 					this.card_info = res.card_info
 					this.card = res.card
 					this.cate = res.cate
+					this.nologintips = res.tip
+					this.topimg = res.topimg 
 				}
 			},
 			async getData() {
@@ -401,7 +461,44 @@
 					}
 				});
 			},
+			isLimit() {
+				let islimit = true
+				if(this.join != 1) {
+					islimit = false 
+				}
+				if(!islimit) {
+					this.showToast({
+						type: 'error',
+						message: this.nologintips, 
+					})
+				}
+				return islimit
+			},
+			makeCall({data}) {
+				if(!this.isLimit()) return
+				// this.$emit('makeCall', {data: this.origin.phone})
+				uni.makePhoneCall({
+					phoneNumber: data
+				});
+			},
+			async follow({data}) {
+				if(!this.isLimit()) return
+				// this.$emit('makeCall', {data: this.origin.phone})
+				const res = await this.$api.follow({
+					params: {
+						login: data.login,
+						follow: 1
+					}
+				})
+				if(res.code == 1) {
+					this.showToast({
+						type: 'success',
+						message: res.msg, 
+					})
+				}
+			},
 			cardClick({data}) {
+				if(!this.isLimit()) return
 				this.handleGoto({
 					url: '/pages/index/frontCard/frontCard',
 					params: {
@@ -412,7 +509,18 @@
 		}
 	}
 </script>
-
+<style lang="scss">
+	page {
+		background-color: #f8f8f8;
+		/deep/ {
+			.u-swipe-action-item {
+				border-radius: 10px!important;
+				overflow: hidden!important;
+				margin-bottom: 6px!important;
+			}
+		}
+	}
+</style>
 <style lang="scss" scoped>
 	.search-wrapper {
 		position: relative;
@@ -428,22 +536,32 @@
 		}
 	}
 	.w {
-		height: 100vh;
+		min-height: 100vh;
 		padding-bottom: 60px;
 		box-sizing: border-box;
 	}
 	.group-main {
-		flex: 1; 
-		overflow: hidden;
+		min-height: calc(100vh - 104px);
+		// flex: 1; 
+		// overflow: hidden;
 	}
 	.group-header {
 		position: relative;
-		padding: 30px 20px 20px 20px;
-		.group-refresh-btn {
+		padding: 30px 10px 10px 10px;
+		.bg-w {
 			position: absolute;
-			right: 8px;
-			top: 8px;
-			padding: 10px;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100px;
+			z-index: 5;
+			background-color: #2c67df; 
+		}
+		.group-refresh-btn {
+			// position: absolute;
+			// right: 8px;
+			// top: 8px;
+			// padding: 10px;
 			z-index: 15;
 		}
 		.group-header-bg {
@@ -474,6 +592,7 @@
 		.group-header-main {
 			position: relative;
 			z-index: 10;
+			box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
 		}
 		.group-name {
 			font-weight: bold;

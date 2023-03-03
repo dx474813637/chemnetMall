@@ -32,8 +32,16 @@ export const kicking_out_group_book = (data) => http.get('kicking_out_group_book
  
 // web_login_card 前台名片页 参数login
 export const web_login_card = (data) => http.get('web_login_card', data)
-// edit_tiao_book 设置名片页调整群  参数 群id：id
+// edit_tiao_book 设置名片页跳转群  参数 群id：id
 export const edit_tiao_book = (data) => http.get('edit_tiao_book', data)
+// myjoin_group_book 我加入的群
+export const myjoin_group_book = (data) => http.get('myjoin_group_book', data)
+
+
 // upimg 传图片
 export const upimg = (data) => http.get('upimg', data)
  
+ // follow 关注+取消 参数login  follow=1关注 2取消关注
+export const follow = (data) => http.get('follow', data)
+// follow_list 关注列表 没参数 不分页
+export const follow_list = (data) => http.get('follow_list', data)

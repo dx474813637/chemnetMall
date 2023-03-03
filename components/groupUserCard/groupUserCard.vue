@@ -23,20 +23,20 @@
 			</view>
 			<view class="u-font-26 text-light u-line-2">{{origin.company}}</view>
 		</view>
-		<view class="item u-m-r-10 u-flex u-flex-items-center u-flex-center u-p-20" @click="makeCall" v-if="origin.isMe != 1 && origin.phone">
+		<view class="item u-flex u-flex-items-center u-flex-center u-p-20" @click="makeCall" v-if="origin.isMe != 1 && origin.phone">
 			<i class="custom-icon-dianhua custom-icon " style="font-size: 24px; color: #26c341;"></i>
 		</view>
 		<view class="item u-flex u-flex-items-center u-flex-center  text-primary " >
 			<u-button 
 				type="error" 
 				size="small" 
-				@click="handleGoto('/pages/my/inquiry/inquiry')" 
+				@click="follow" 
 				plain
 				v-if="origin.isMe != 1 && origin.phone"
 				:customStyle="{
 					fontSize: '14px',
 					minWidth: 'auto'
-				}">询盘</u-button>
+				}">{{followBtnText}}</u-button>
 		</view>
 	</view>
 </template>
@@ -56,6 +56,10 @@
 				default:() => {
 					return {}
 				},
+			}, 
+			followBtnText: {
+				type: String,
+				default: '关注'
 			}
 		},
 		data() {
@@ -71,9 +75,13 @@
 				this.$emit('cardClick', {data: this.origin})
 			},
 			makeCall() {
-				uni.makePhoneCall({
-					phoneNumber: this.origin.phone
-				});
+				this.$emit('makeCall', {data: this.origin.phone})
+				// uni.makePhoneCall({
+				// 	phoneNumber: this.origin.phone
+				// });
+			},
+			follow() {
+				this.$emit('follow', {data: this.origin})
 			}
 		}
 	}

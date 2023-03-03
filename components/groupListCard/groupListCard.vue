@@ -4,14 +4,14 @@
 			<u--image 
 			showLoading 
 			:src="origin.pic" 
-			width="80px" 
-			height="80px" 
+			width="75px" 
+			height="75px" 
 			radius="5"
 			></u--image>
 		</view>
 		<view class="item u-m-l-30 u-flex-1" >
-			<view class="u-font-36 text-dark u-m-b-8 u-line-1" >{{origin.name}}</view>
-			<view class="u-font-28 text-light u-line-3">
+			<view class="u-font-34 text-dark u-m-b-8 u-line-1" >{{origin.name}}</view>
+			<view class="u-font-26 text-light u-line-3">
 				<rich-text :nodes="origin.info"></rich-text>
 			</view>
 		</view>
