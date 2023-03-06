@@ -91,13 +91,27 @@
 		}
 
 	}, {
-			"path": "pages/index/myFollow/myFollow",
-			"style": {
-				"navigationBarTitleText": "我的关注",
-				"enablePullDownRefresh": false
-			}
+		"path": "pages/index/myFollow/myFollow",
+		"style": {
+			"navigationBarTitleText": "我的关注",
+			"enablePullDownRefresh": false
+		}
 
-		}],
+	}, {
+		"path": "pages/index/dynamic/dynamic",
+		"style": {
+			"navigationBarTitleText": "详情",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/index/dynamic/dynamicList",
+		"style": {
+			"navigationBarTitleText": "列表",
+			"enablePullDownRefresh": false
+		}
+
+	}],
 	"subPackages": [{
 		"root": "pages/my",
 		"pages": [{
@@ -270,6 +284,13 @@
 			"path": "user/setCard2Group",
 			"style": {
 				"navigationBarTitleText": "设置名片页关联群",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "user/dynamicEdit",
+			"style": {
+				"navigationBarTitleText": "编辑",
 				"enablePullDownRefresh": false
 			}
 

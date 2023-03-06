@@ -45,3 +45,22 @@ export const upimg = (data) => http.get('upimg', data)
 export const follow = (data) => http.get('follow', data)
 // follow_list 关注列表 没参数 不分页
 export const follow_list = (data) => http.get('follow_list', data)
+
+// dynamiclist 参数 群id：id p
+export const dynamiclist = (data) => http.get('dynamiclist', data)
+// add_dynamiclist 发布动态 参数群id必须 info img(多张图用逗号隔开)  info img两个字段至少一个有内容。
+export const add_dynamiclist = (data) => http.get('add_dynamiclist', data)
+// add_dynamiclist_like 动态点赞 动态id
+export const add_dynamiclist_like = (data) => http.get('add_dynamiclist_like', data)
+// dynamic_detail 动态详情 参数动态id p 评论的分页
+export const dynamic_detail = (data) => http.get('dynamic_detail', data)
+// add_dynamiclist_reply 动态评论 参数动态id，info 必填
+export const add_dynamiclist_reply = (data) => http.get('add_dynamiclist_reply', data)
+// add_dynamiclist_reply_like 动态评论点赞 评论id
+export const add_dynamiclist_reply_like = (data) => http.get('add_dynamiclist_reply_like', data)
+// del_dynamiclist 删除动态 动态id 发布者和群管理员能删除 显示删除按钮。
+export const del_dynamiclist = (data) => http.get('del_dynamiclist', data)
+// del_dynamiclist_reply 删除动态评论 评论id 发布者和群管理员能删除 显示删除按钮。
+export const del_dynamiclist_reply = (data) => http.get('del_dynamiclist_reply', data)
+// my_dynamiclist 我的发布/Ta的发布 参数p login 不传就是自己的，传了就是对方的。
+export const my_dynamiclist = (data) => http.get('my_dynamiclist', data)
