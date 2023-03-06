@@ -51,21 +51,21 @@
 			
 			
 			<!-- 群最新动态 -->
-			<view class="group-dynamic-w bg-white u-radius-10 u-p-20 u-m-t-30">
+			<view class="group-dynamic-w bg-white u-radius-10 u-p-20 u-m-t-30" v-if="find_dynamic == 1">
 				<view class="u-flex u-flex-items-baseline u-flex-between u-border-bottom u-p-10">
-					<view class="item text-dark u-font-32">群发布</view>
+					<view class="item text-dark u-font-28">群发布</view>
 					<view class="text-primary u-font-28" @click="handleGoto({url: '/pages/index/dynamic/dynamicList', params: {id: id}})">查看更多</view>
 				</view>
 				<view class="group-dynamic u-flex u-flex-items-start u-m-t-10 u-p-20">
 					<view class="item">
-						<u--image :src="'https://cdn.uviewui.com/uview/example/fade.jpg'" width="50px" shape="circle" height="50px"></u--image>
+						<u--image :src="dynamic_list.avatar" width="50px" shape="circle" height="50px"></u--image>
 					</view>
 					<view class="item u-flex-1 u-m-l-20">
 						<view class="u-flex u-flex-between u-flex-items-baseline u-m-b-12">
-							<view class="text-dark u-font-28">name我的名字</view>
-							<view class="text-base u-font-28">1个月前</view>
+							<view class="text-dark u-font-28">{{dynamic_list.name}}</view>
+							<view class="text-base u-font-28">{{$u.timeFrom(dynamic_list.publishtime*1000)}}</view>
 						</view>
-						<view class="text-base u-line-2 u-font-28">的撒娇的卡刷点卡后即可大卡司打卡机空间的卡刻录机考虑打书的撒娇的卡刷点卡后即可大卡司打卡机空间的卡刻录机考虑打书</view>
+						<view class="text-base u-line-2 u-font-28">{{dynamic_list.content}}</view>
 						
 					</view>
 				</view>
@@ -86,7 +86,7 @@
 					></u-search>
 				</view>
 				<view class="u-m-l-20">
-					<u-button type="primary" size="small" plain @click="handleGoto({url: '/pages/index/dynamic/dynamicList', params: {id: id}})">群发布</u-button>
+					<u-button type="primary" size="small" plain @click="handleGoto({url: '/pages/index/dynamic/dynamicList', params: {id: id}})">{{dynamic.name}}</u-button>
 				</view>
 			</view> 
 		</u-sticky> 
@@ -274,7 +274,7 @@
 				pageLoading: true,
 				id: '',
 				indexList: [] ,
-				dynamic_list: [],
+				dynamic_list: {},
 				find_dynamic: 0,
 				dynamic: {},
 				memberNum: 0,
